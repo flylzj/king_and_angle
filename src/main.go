@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	route := gin.Default()
 	resource.User(route.Group("/api/user"))
 	resource.KingAngAngle(route.Group("/api/king-and-angle", resource.JWTAuth()))
