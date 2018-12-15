@@ -21,7 +21,7 @@ var upgrader = websocket.Upgrader{
 func WsConnectionHandle(ctx *gin.Context){
 	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil{
-		fmt.Println("connect err", err.Error())
+		log.Fatalln("connect err", err.Error())
 	}
 
 	defer ws.Close()
