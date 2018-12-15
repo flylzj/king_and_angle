@@ -13,5 +13,5 @@ func main() {
 	resource.Blessing(route.Group("/api/blessing", resource.JWTAuth()))
 	route.GET("/ws", chat.WsConnectionHandle)
 	go chat.MessagePushHandle()
-	route.Run(":8080")
+	route.Run("127.0.0.1:8003")
 }

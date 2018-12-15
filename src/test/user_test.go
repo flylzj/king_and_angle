@@ -1,8 +1,8 @@
 package test
 
 import (
-	"model"
-	"resource"
+	"king_and_angle/modeland_angle/model"
+	"king_and_angle/resource_angle/resource"
 	"testing"
 )
 
