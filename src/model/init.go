@@ -2,9 +2,7 @@ package model
 
 import (
 	"config"
-	"fmt"
 	"github.com/jinzhu/gorm"
-	"os"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
@@ -17,9 +15,7 @@ func init(){
 	var err error
 	Db, err = gorm.Open("mysql", config.MYSQLURI)
 	if err != nil{
-		fmt.Println(err)
-		fmt.Println("数据库链接错误")
-		os.Exit(0)
+		config.Error.Fatalln("数据库链接错误")
 	}
 
 	if !Db.HasTable(&User{}){

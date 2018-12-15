@@ -1,6 +1,7 @@
 package resource
 
 import (
+	"config"
 	"github.com/gin-gonic/gin"
 	"model"
 	"net/http"
@@ -40,7 +41,10 @@ func getKingOrAngle(t string, user model.User)(model.User){
 		return GetUserByUsername(user.KingUsername)
 	}else {
 		var myAngle model.User
-		model.Db.Where("king_username = ?", user.Username).Find(&myAngle)
+		err := model.Db.Where("king_username = ?", user.Username).Find(&myAngle)
+		if err != nil{
+			config.Error.Println("GetKingOrAngle(angle) err:", err.Error)
+		}
 		return myAngle
 	}
 }

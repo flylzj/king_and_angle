@@ -1,10 +1,10 @@
 package resource
 
 import (
+	"config"
 	"errors"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"log"
 	"model"
 	"time"
 )
@@ -43,7 +43,7 @@ func Verify(username, password string) (string, error){
 		j := NewJWT()
 		token, err := j.CreateToken(CustomClaims{ID:user.ID, StandardClaims:jwt.StandardClaims{ExpiresAt:time.Now().Add(time.Hour * 1).Unix()}})
 		if err != nil{
-			log.Fatalln("generateToken error", err.Error())
+			config.Error.Println("generateToken error", err.Error())
 			return "", err
 		}
 		return token, err
@@ -54,13 +54,19 @@ func Verify(username, password string) (string, error){
 
 func GetUserById(userId uint)model.User{
 	var user model.User
-	model.Db.Where("id=?", userId).Find(&user)
+	err := model.Db.Where("id=?", userId).Find(&user)
+	if err != nil{
+		config.Error.Println("GetUserByIde err:", err.Error)
+	}
 	return user
 }
 
 
 func GetUserByUsername(username string) model.User{
 	var user model.User
-	model.Db.Where("username = ?", username).Find(&user)
+	err := model.Db.Where("username = ?", username).Find(&user)
+	if err != nil{
+		config.Error.Println("GetUserByUsername err:", err.Error)
+	}
 	return user
 }

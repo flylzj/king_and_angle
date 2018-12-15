@@ -1,6 +1,7 @@
 package resource
 
 import (
+	"config"
 	"github.com/gin-gonic/gin"
 	"model"
 	"net/http"
@@ -34,7 +35,10 @@ func Blessing(g *gin.RouterGroup){
 				})
 			}else{
 				currentUser.Blessing = blessing.Blessing
-				model.Db.Save(&currentUser)
+				err := model.Db.Save(&currentUser)
+				if err != nil{
+					config.Error.Println("Post blessing err:", err.Error)
+				}
 				ctx.JSON(http.StatusOK, gin.H{
 					"message": "success",
 					"code": 0,

@@ -1,7 +1,7 @@
 package chat
 
 import (
-	"fmt"
+	"config"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
@@ -21,7 +21,7 @@ var upgrader = websocket.Upgrader{
 func WsConnectionHandle(ctx *gin.Context){
 	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil{
-		log.Fatalln("connect err", err.Error())
+		config.Error.Fatalln("connect err", err.Error())
 	}
 
 	defer ws.Close()
@@ -40,6 +40,7 @@ func WsConnectionHandle(ctx *gin.Context){
 		for{
 			var msg model.ChatMessage
 			if err := ws.ReadJSON(&msg);err != nil{
+				config.Error.Println("json error: ", err.Error())
 				ws.WriteJSON(model.NoticeMessage{Message:"json error", Code:1})
 			}else{
 				broadcast <- msg
@@ -47,6 +48,7 @@ func WsConnectionHandle(ctx *gin.Context){
 			}
 		}
 	}else{
+		config.Error.Println("token error: ", err.Error())
 		ws.WriteJSON(model.NoticeMessage{Message:"token error", Code:1})
 	}
 }
@@ -60,15 +62,14 @@ func MessagePushHandle(){
 			log.Printf("消息发送失败")
 			continue
 		}
-		log.Printf("收到来自%s发给%s的消息, 内容为:%s", fromUser.Name, toUser.Name, msg.Message)
+		config.Info.Printf("收到来自%s发给%s的消息, 内容为:%s", fromUser.Name, toUser.Name, msg.Message)
 		toClient := clients[toUser.Username]
 		if toClient == nil{
-			fmt.Println("存入redis")
+			config.Info.Printf("来自%s的消息, %s不在线, 消息被丢弃", fromUser.Name, toUser.Name)
 			continue
 		}
-		err := toClient.WriteJSON(&msg)
-		if err != nil{
-			fmt.Println("push message err", err.Error())
+		if err := toClient.WriteJSON(&msg);err != nil{
+			config.Error.Println("push message err", err.Error())
 		}
 	}
 }
