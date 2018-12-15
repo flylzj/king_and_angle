@@ -1,0 +1,13 @@
+version: '2'
+services:
+  app:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+    - .:/app
+
+    ports:
+    - "127.0.0.1:8003:8003"
+    command: ["./main"]
