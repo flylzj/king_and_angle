@@ -19,5 +19,5 @@ func init(){
 	}
 	MYSQLURI = "christmas_user:lzjlzj123@(gz-cdb-h25tz5ek.sql.tencentcdb.com:62581)/christmas?charset=utf8&parseTime=True&loc=Local"
 	Info = log.New(os.Stdout, "Info:", log.Ldate | log.Ltime | log.Lshortfile)
-	Error = log.New(io.MultiWriter(os.Stdout, errFile), "Error:", log.Ldate | log.Ltime | log.Lshortfile)
+	Error = log.New(io.MultiWriter(os.Stdout, errFile), "Error:", log.Ldate | log.Ltime | log.Llongfile)
 }

@@ -62,7 +62,7 @@ need
 
 ### 发送祝福给国王
 
-`POST /api/king-and-angle/king`
+`POST /api/blessing/king`
 
 need 
 

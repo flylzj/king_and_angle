@@ -21,7 +21,8 @@ var upgrader = websocket.Upgrader{
 func WsConnectionHandle(ctx *gin.Context){
 	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil{
-		config.Error.Fatalln("connect err", err.Error())
+		config.Error.Println("connect err", err.Error())
+		ctx.Abort()
 	}
 
 	defer ws.Close()
@@ -31,7 +32,7 @@ func WsConnectionHandle(ctx *gin.Context){
 	if err := ws.ReadJSON(&msg);err != nil{
 		ws.WriteJSON(model.NoticeMessage{Message:"data error", Code:1})
 	}
-
+    config.Info.Println(msg)
 	claims, result := resource.CheckToken(msg.Token)
 	if result{
 		currentUser := resource.GetUserById(claims.ID)
@@ -41,14 +42,14 @@ func WsConnectionHandle(ctx *gin.Context){
 			var msg model.ChatMessage
 			if err := ws.ReadJSON(&msg);err != nil{
 				config.Error.Println("json error: ", err.Error())
-				ws.WriteJSON(model.NoticeMessage{Message:"json error", Code:1})
+				break
 			}else{
 				broadcast <- msg
 				ws.WriteJSON(model.NoticeMessage{Message:"success", Code:0})
 			}
 		}
 	}else{
-		config.Error.Println("token error: ", err.Error())
+		config.Error.Println("token error")
 		ws.WriteJSON(model.NoticeMessage{Message:"token error", Code:1})
 	}
 }
@@ -71,5 +72,6 @@ func MessagePushHandle(){
 		if err := toClient.WriteJSON(&msg);err != nil{
 			config.Error.Println("push message err", err.Error())
 		}
+		config.Info.Printf("%s发给%s的消息, 内容为:%s，转发成功", fromUser.Name, toUser.Name, msg.Message)
 	}
 }
