@@ -23,6 +23,7 @@ func WsConnectionHandle(ctx *gin.Context){
 	if err != nil{
 		config.Error.Println("connect err", err.Error())
 		ctx.Abort()
+		return
 	}
 
 	defer ws.Close()
@@ -71,6 +72,7 @@ func MessagePushHandle(){
 		}
 		if err := toClient.WriteJSON(&msg);err != nil{
 			config.Error.Println("push message err", err.Error())
+			continue
 		}
 		config.Info.Printf("%s发给%s的消息, 内容为:%s，转发成功", fromUser.Name, toUser.Name, msg.Message)
 	}
