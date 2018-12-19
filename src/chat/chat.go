@@ -32,6 +32,7 @@ func WsConnectionHandle(ctx *gin.Context){
 
 	if err := ws.ReadJSON(&msg);err != nil{
 		ws.WriteJSON(model.NoticeMessage{Message:"data error", Code:1})
+		return
 	}
     config.Info.Println(msg)
 	claims, result := resource.CheckToken(msg.Token)
