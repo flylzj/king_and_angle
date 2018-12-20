@@ -32,7 +32,6 @@ func User(g *gin.RouterGroup){
 			})
 		}
 	})
-
 }
 
 

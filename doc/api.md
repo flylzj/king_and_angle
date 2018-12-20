@@ -27,6 +27,27 @@ need
 
 ## 国王与天使
 
+### 添加愿望
+
+`POST /api/king-and-angle/wish`
+
+need
+
+```json
+{
+  "wish": ""
+}
+```
+
+成功后返回
+
+```json
+{
+  "message": "success",
+  "code": 0
+}
+```
+
 ###  查看国王
 
 `GET /api/king-and-angle/king`
