@@ -20,7 +20,8 @@ need
 {
     "code": 0,
     "message": "success",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3OH0.C7uzc0laz9xlelzIcbjTr1wUZSAyoRVeUKtQUOj9my4"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3OH0.C7uzc0laz9xlelzIcbjTr1wUZSAyoRVeUKtQUOj9my4",
+    "wish": "",  //没有则为空字符串
 }
 ```
 

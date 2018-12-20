@@ -3,7 +3,6 @@ package resource
 import (
 	"config"
 	"errors"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"model"
@@ -19,7 +18,6 @@ func User(g *gin.RouterGroup){
 				"code": 1,
 			})
 		}
-		fmt.Println(loginModel)
 		if token, err := Verify(loginModel.Username, loginModel.Password); err != nil{
 			ctx.JSON(401, gin.H{
 				"message": "用户名或密码错误",
@@ -30,6 +28,7 @@ func User(g *gin.RouterGroup){
 				"message": "success",
 				"code":    0,
 				"token":   token,
+				"wish": GetUserByUsername(loginModel.Username).Wish,
 			})
 		}
 	})
