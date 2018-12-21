@@ -31,6 +31,7 @@ func KingAngAngle(group *gin.RouterGroup){
 			"data": gin.H{
 				"angle_name": angle.Name,
 				"angle_blessing": angle.Blessing,
+				"angle_username": angle.Username,
 			},
 		})
 	})
