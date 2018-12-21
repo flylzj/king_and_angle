@@ -55,7 +55,7 @@ func Verify(username, password string) (string, error){
 func GetUserById(userId uint)model.User{
 	var user model.User
 	err := model.Db.Where("id=?", userId).Find(&user)
-	if err != nil{
+	if err.Error != nil{
 		config.Error.Println("GetUserByIde err:", err.Error)
 	}
 	return user
@@ -65,7 +65,7 @@ func GetUserById(userId uint)model.User{
 func GetUserByUsername(username string) model.User{
 	var user model.User
 	err := model.Db.Where("username = ?", username).Find(&user)
-	if err != nil{
+	if err.Error != nil{
 		config.Error.Println("GetUserByUsername err:", err.Error)
 	}
 	return user

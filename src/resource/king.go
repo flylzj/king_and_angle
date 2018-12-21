@@ -47,9 +47,9 @@ func KingAngAngle(group *gin.RouterGroup){
 		currentUser := ctx.MustGet("current_user").(model.User)
 		currentUser.Wish = wishModel.Wish
 		err := model.Db.Save(&currentUser)
-		if err != nil{
+		if err.Error != nil{
 			ctx.JSON(200, gin.H{
-				"message": "save wish failed" + err.Error.Error(),
+				"message": "save wish failed",
 				"code": 1,
 			})
 		}
@@ -66,7 +66,7 @@ func getKingOrAngle(t string, user model.User)(model.User){
 	}else {
 		var myAngle model.User
 		err := model.Db.Where("king_username = ?", user.Username).Find(&myAngle)
-		if err != nil{
+		if err.Error != nil{
 			config.Error.Println("GetKingOrAngle(angle) err:", err.Error)
 		}
 		return myAngle
