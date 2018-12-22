@@ -34,7 +34,6 @@ func WsConnectionHandle(ctx *gin.Context){
 		ws.WriteJSON(model.NoticeMessage{Message:"data error", Code:1})
 		return
 	}
-    config.Info.Println(msg)
 	claims, result := resource.CheckToken(msg.Token)
 	if result{
 		currentUser := resource.GetUserById(claims.ID)
@@ -44,10 +43,26 @@ func WsConnectionHandle(ctx *gin.Context){
 			var msg model.ChatMessage
 			if err := ws.ReadJSON(&msg);err != nil{
 				config.Error.Println("json error: ", err.Error())
-				break
+				err := ws.WriteJSON(model.NoticeMessage{Message:"json error", Code:1})
+				if err != nil{
+					config.Error.Println("send message error:", err.Error())
+				}
+				continue
+			}
+			if msg.Type == "ping"{
+				if clients[msg.Username] != nil{
+					err := ws.WriteJSON(model.NoticeMessage{Message:"success", Code:0})
+					if err != nil{
+						config.Error.Println("send message errp:", err.Error())
+					}
+				}else{
+					err := ws.WriteJSON(model.NoticeMessage{Message:"not on line", Code:1})
+					if err != nil {
+						config.Error.Println("send message error:", err.Error())
+					}
+				}
 			}else{
 				broadcast <- msg
-				ws.WriteJSON(model.NoticeMessage{Message:"success", Code:0})
 			}
 		}
 	}else{
@@ -67,9 +82,19 @@ func MessagePushHandle(){
 		}
 		config.Info.Printf("收到来自%s发给%s的消息, 内容为:%s", fromUser.Name, toUser.Name, msg.Message)
 		toClient := clients[toUser.Username]
+		fromClient := clients[fromUser.Username]
 		if toClient == nil{
+			err := fromClient.WriteJSON(model.NoticeMessage{Message:"消息发送失败,对方不在线", Code:1})
+			if err != nil{
+				config.Error.Println("send message error : ", err.Error())
+			}
 			config.Info.Printf("来自%s的消息, %s不在线, 消息被丢弃", fromUser.Name, toUser.Name)
 			continue
+		}else {
+			err := fromClient.WriteJSON(model.NoticeMessage{Message:"消息发送成功", Code:0})
+			if err != nil{
+				config.Error.Println("send message error : ", err.Error())
+			}
 		}
 		if err := toClient.WriteJSON(&msg);err != nil{
 			config.Error.Println("push message err", err.Error())
