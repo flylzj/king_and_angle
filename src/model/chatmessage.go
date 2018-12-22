@@ -15,7 +15,7 @@ type NoticeMessage struct {
 }
 
 type PingMessage struct {
-	Username	string		`json:"message"`
+	Username	string		`json:"username"`
 	Online		uint		`json:"online"`
 }
 
