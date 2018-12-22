@@ -14,5 +14,10 @@ type NoticeMessage struct {
 	Code        uint		`json:"code"`
 }
 
+type PingMessage struct {
+	Username	string		`json:"message"`
+	Online		uint		`json:"online"`
+}
+
 
 

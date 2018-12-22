@@ -51,12 +51,12 @@ func WsConnectionHandle(ctx *gin.Context){
 			}
 			if msg.Type == "ping"{
 				if clients[msg.Username] != nil{
-					err := ws.WriteJSON(model.NoticeMessage{Message:"success", Code:0})
+					err := ws.WriteJSON(model.PingMessage{Username:msg.Username, Online:0})
 					if err != nil{
 						config.Error.Println("send message errp:", err.Error())
 					}
 				}else{
-					err := ws.WriteJSON(model.NoticeMessage{Message:"not on line", Code:1})
+					err := ws.WriteJSON(model.PingMessage{Username:msg.Username, Online:1})
 					if err != nil {
 						config.Error.Println("send message error:", err.Error())
 					}
