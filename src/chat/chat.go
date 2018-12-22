@@ -46,6 +46,8 @@ func WsConnectionHandle(ctx *gin.Context){
 				err := ws.WriteJSON(model.NoticeMessage{Message:"json error", Code:1})
 				if err != nil{
 					config.Error.Println("send message error:", err.Error())
+					delete(clients, currentUser.Username)
+					break
 				}
 				continue
 			}
@@ -53,12 +55,14 @@ func WsConnectionHandle(ctx *gin.Context){
 				if clients[msg.Username] != nil{
 					err := ws.WriteJSON(model.PingMessage{Username:msg.Username, Online:0})
 					if err != nil{
-						config.Error.Println("send message errp:", err.Error())
+						config.Error.Println("send message error:", err.Error())
+						break
 					}
 				}else{
 					err := ws.WriteJSON(model.PingMessage{Username:msg.Username, Online:1})
 					if err != nil {
 						config.Error.Println("send message error:", err.Error())
+						break
 					}
 				}
 			}else{
