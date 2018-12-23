@@ -11,6 +11,7 @@ func main() {
 	route := gin.Default()
 	route.Use(resource.Cors())
 	resource.User(route.Group("/api/user"))
+	resource.UserInfo(route.Group("/api/user", resource.JWTAuth()))
 	resource.KingAngAngle(route.Group("/api/king-and-angle", resource.JWTAuth()))
 	resource.Blessing(route.Group("/api/blessing", resource.JWTAuth()))
 	route.GET("/ws", chat.WsConnectionHandle)

@@ -5,3 +5,6 @@ type LoginModel struct {
 	Password	string		`json:"password" binding:"required"`
 }
 
+type PasswordModel struct {
+	Password	string		`json:"password" binding:"required"`
+}

@@ -24,13 +24,48 @@ func User(g *gin.RouterGroup){
 				"code": 1,
 			})
 		}else {
+			user := GetUserByUsername(loginModel.Username)
+			var isInitial bool
+			if CheckPasswordHash(user.Username, user.Password){
+				isInitial = true
+			}else{
+				isInitial = false
+			}
 			ctx.JSON(200, gin.H{
 				"message": "success",
 				"code":    0,
 				"token":   token,
 				"wish": GetUserByUsername(loginModel.Username).Wish,
+				"isInitial": isInitial,
 			})
 		}
+	})
+}
+
+func UserInfo(group *gin.RouterGroup){
+	group.POST("/password", func(ctx *gin.Context){
+		currentUser := ctx.MustGet("current_user").(model.User)
+		var password model.PasswordModel
+		if err := ctx.ShouldBindJSON(&password); err != nil{
+			ctx.JSON(400, gin.H{
+				"message": "bad request",
+				"code": 1,
+			})
+		}
+		hashPassword := HashPassword2(password.Password)
+		currentUser.Password = hashPassword
+		if err := model.Db.Save(currentUser).Error; err != nil{
+			ctx.JSON(400, gin.H{
+				"message": err.Error(),
+				"code": 1,
+			})
+		}else{
+			ctx.JSON(200, gin.H{
+				"message": "success",
+				"code": 0,
+			})
+		}
+
 	})
 }
 

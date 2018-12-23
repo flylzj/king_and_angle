@@ -1,12 +1,14 @@
 package resource
 
 import (
+	"crypto/rand"
 	"crypto/sha1"
 	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/crypto/pbkdf2"
 	"net/http"
 	"strings"
@@ -170,6 +172,8 @@ func CheckToken(token string)(*CustomClaims, bool){
 
 var (
 	iterations  = 1000
+	saltLength = 8
+	salt = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 )
 
 func HashInternal(salt string, password string) string {
@@ -183,4 +187,24 @@ func CheckPasswordHash(password string, hash string) bool {
 	}
 	pwdHashLists := strings.Split(hash, "$")
 	return pwdHashLists[2] == HashInternal(pwdHashLists[1], password)
+}
+
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func genSalt() string {
+	var bytes = make([]byte, saltLength)
+	rand.Read(bytes)
+	for k, v := range bytes {
+		bytes[k] = salt[v%byte(len(salt))]
+	}
+	return string(bytes)
+}
+
+func HashPassword2(password string)(string){
+	salt := genSalt()
+	hash := HashInternal(salt, password)
+	return fmt.Sprintf("pbkdf2:sha1:%v$%s$%s", iterations, salt, hash)
 }
