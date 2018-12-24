@@ -36,6 +36,7 @@ func User(g *gin.RouterGroup){
 				"code":    0,
 				"token":   token,
 				"wish": GetUserByUsername(loginModel.Username).Wish,
+				"wish_status": user.WishFinished,
 				"isInitial": isInitial,
 			})
 		}

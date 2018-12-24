@@ -18,6 +18,7 @@ func KingAngAngle(group *gin.RouterGroup){
 				"king": king.Name,
 				"king_username": king.Username,
 				"king_wish": king.Wish,
+				"king_wish_status": king.WishFinished,
 			},
 		})
 	})
@@ -44,6 +45,12 @@ func KingAngAngle(group *gin.RouterGroup){
 				"code": 1,
 			})
 		}
+		if wishModel.Wish == ""{
+			ctx.JSON(400, gin.H{
+				"message": "bad request",
+				"code": 1,
+			})
+		}
 		currentUser := ctx.MustGet("current_user").(model.User)
 		currentUser.Wish = wishModel.Wish
 		err := model.Db.Save(&currentUser)
@@ -57,6 +64,48 @@ func KingAngAngle(group *gin.RouterGroup){
 			"message": "success",
 			"code": 0,
 		})
+	})
+
+	group.GET("/wish", func(ctx *gin.Context) {
+		currentUser := ctx.MustGet("current_user").(model.User)
+		ctx.JSON(200, gin.H{
+			"message": "success",
+			"code": 0,
+			"wish": currentUser.Wish,
+			"wish_status": currentUser.WishFinished,
+		})
+	})
+
+	group.POST("/wish_status", func(ctx *gin.Context) {
+		currentUser := ctx.MustGet("current_user").(model.User)
+		var wishStatus model.WishStatusModel
+		if err := ctx.ShouldBindJSON(&wishStatus); err != nil{
+			ctx.JSON(400, gin.H{
+				"message": "bad request" + err.Error(),
+				"code": "1",
+			})
+		}
+		status := [2]uint{0, 1}
+        config.Info.Println(wishStatus.WishStatus == status[1])
+		if wishStatus.WishStatus != status[0] && wishStatus.WishStatus != status[1]{
+			ctx.JSON(400, gin.H{
+				"message": "bad request",
+				"code": "1",
+			})
+		}else{
+			currentUser.WishFinished = wishStatus.WishStatus
+			if err := model.Db.Save(&currentUser).Error; err != nil{
+				ctx.JSON(200, gin.H{
+					"message": err.Error(),
+					"code": "1",
+				})
+			}else{
+				ctx.JSON(200, gin.H{
+					"message": "success",
+					"code": "0",
+				})
+			}
+		}
 	})
 }
 

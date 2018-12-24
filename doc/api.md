@@ -21,11 +21,47 @@ need
     "code": 0,
     "message": "success",
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3OH0.C7uzc0laz9xlelzIcbjTr1wUZSAyoRVeUKtQUOj9my4",
-    "wish": "",  //没有则为空字符串
+    "wish": ""  //没有则为空字符串
 }
 ```
 
 ## 国王与天使
+
+### 查看我的愿望
+
+`GET /api/king-and-angle/wish`
+
+成功后返回
+
+```json
+{
+"code": 0,
+"message": "success",
+"wish": "",
+"wish_status": 0  // status=0未完成   status=1 完成
+}
+```
+
+### 更新我的愿望状态
+
+`POST /api/king-and-angle/wish_status`
+
+need
+
+```json
+{
+  "wish_status": 0 // stauts 同上
+}
+```
+
+成功后返回
+
+```json
+{
+"code": "0",
+"message": "success"
+}
+```
 
 ### 添加愿望
 
@@ -60,7 +96,8 @@ need
     "data": {
         "king": "xxx",
         "king_username": "xxx",
-        "king_wish": ""
+        "king_wish": "",
+        "king_wish_status": 0,
     },
     "message": "success"
 }

@@ -9,6 +9,7 @@ type User struct {
 	KingUsername	string
 	Wish 		string		`gorm:"type:text"`
 	Blessing    string		`gorm:"type:text"`
+	WishFinished  uint
 }
 
 func (User) TableName()string{
