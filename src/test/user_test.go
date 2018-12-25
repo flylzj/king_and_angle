@@ -27,7 +27,7 @@ func TestVerify(t *testing.T){
 
 func TestCreateToken(t *testing.T){
 	j := resource.NewJWT()
-	token, _ := j.CreateToken(resource.CustomClaims{ID:58, StandardClaims:jwt.StandardClaims{ExpiresAt:time.Now().Add(time.Hour * 1).Unix()}})
+	token, _ := j.CreateToken(resource.CustomClaims{ID:53, StandardClaims:jwt.StandardClaims{ExpiresAt:time.Now().Add(time.Hour * 1).Unix()}})
 	t.Log(token)
 
 }

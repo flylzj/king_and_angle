@@ -41,6 +41,16 @@ func User(g *gin.RouterGroup){
 			})
 		}
 	})
+
+	g.GET("/all/:name", func(ctx *gin.Context) {
+		name := ctx.Param("name")
+		ctx.JSON(200, gin.H{
+			"message": "success",
+			"code": 0,
+			"data": getAll(name),
+		})
+
+	})
 }
 
 func UserInfo(group *gin.RouterGroup){

@@ -121,3 +121,14 @@ func getKingOrAngle(t string, user model.User)(model.User){
 		return myAngle
 	}
 }
+
+func getAll(name string)(infos [2]string){
+	var user model.User
+	model.Db.Where("name=?", name).Find(&user)
+	infos[0] = user.Name
+	infos[1] = GetUserByUsername(user.KingUsername).Name
+	//for _, user := range users{
+	//	infos = append(infos, [2]string{user.Name, GetUserByUsername(user.KingUsername).Name})
+	//}
+	return
+}
