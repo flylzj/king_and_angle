@@ -22,6 +22,10 @@ func init(){
 		Db.CreateTable(&User{})
 	}
 
-	Db.AutoMigrate(&User{})
+	if !Db.HasTable(&ChatMsg{}){
+		Db.CreateTable(&ChatMsg{})
+	}
+
+	Db.AutoMigrate(&User{}, &ChatMsg{})
 	return
 }

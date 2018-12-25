@@ -4,6 +4,7 @@ type ChatMessage struct {
 	From		string		`json:"from"`
 	To			string		`json:"to"`
 	Message   	string		`json:"message"`
+	SendTime	int			`json:"send_time"`
 	Token    	string		`json:"token"`
 	Type 		string		`json:"type"`
 	Username	string		`json:"username"`
@@ -19,5 +20,17 @@ type PingMessage struct {
 	Online		uint		`json:"online"`
 }
 
+type ChatMsg struct {
+	ID 		uint	`grom:"AUTO_INCREMENT"`
+	FromUsername		string		`gorm:"type:varchar(10)"`
+	ToUsername			string		`gorm:"type:varchar(10)"`
+	Message   	string		`gorm:"type:text"`
+	SendTime	int
+}
+
+
+func (cm *ChatMsg) TableName() string{
+	return "chat_msg"
+}
 
 

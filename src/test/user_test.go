@@ -1,9 +1,11 @@
 package test
 
 import (
-	"king_and_angle/modeland_angle/model"
-	"king_and_angle/resource_angle/resource"
+	"github.com/dgrijalva/jwt-go"
+	"model"
+	"resource"
 	"testing"
+	"time"
 )
 
 func TestVerify(t *testing.T){
@@ -22,6 +24,13 @@ func TestVerify(t *testing.T){
 	}
 }
 
+
+func TestCreateToken(t *testing.T){
+	j := resource.NewJWT()
+	token, _ := j.CreateToken(resource.CustomClaims{ID:58, StandardClaims:jwt.StandardClaims{ExpiresAt:time.Now().Add(time.Hour * 1).Unix()}})
+	t.Log(token)
+
+}
 
 func TestGetUserById(t *testing.T){
 	var(
